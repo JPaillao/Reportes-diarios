@@ -50,6 +50,12 @@ Existen dos flujos principales, que procesan secuencialmente una lista de proyec
 **Dependencia:** Requiere que el Servicio Avanzado "Google Sheets API" esté explícitamente añadido desde la barra lateral del editor.
 **Registro de Error (Obsidian):** [[Fallas_Cuotas_APIs]]
 
+### 6.2 Inserción de Fechas en Formato ISO 8601 por API REST
+**Síntoma:** Al transferir datos con `Sheets.Spreadsheets.Values.update`, las celdas de fechas aparecen como texto crudo (ej: `2026-03-16T03:00:00.000Z`) en lugar del formato legible de Google Sheets.
+**Causa:** La API REST de Google Sheets (`Sheets API`) no sabe interpretar objetos `Date` nativos de Javascript al serializarlos en formato JSON (convirtiéndolos a cadenas ISO), a diferencia del viejo `SpreadsheetApp.setValues()` que sí los parsea como fechas seriales de Sheets.
+**Solución:** Se interceptan los datos en la matriz (`masterData`) antes de enviarlos a la API y se formatea explícitamente cualquier objeto Date (`cell instanceof Date`) hacia un string estructurado (`dd-MM-yyyy`) mediante `Utilities.formatDate()`. Así la opción `USER_ENTERED` de la API lo ingresa correctamente como fecha.
+**Registro de Error (Obsidian):** [[Fallas_Algoritmicas_JS_Python]]
+
 ## 7. Casos Borde: Lógica de Extracción BESS (Recursos y Actividades)
 
 ### 7.1 Recursos (BESS)
